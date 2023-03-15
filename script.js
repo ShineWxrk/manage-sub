@@ -14,32 +14,40 @@ let loader = document.getElementById('loader')
 let span = document.getElementsByClassName('close')[0]
 let ico = document.getElementById('ico')
 
-const request = new XMLHttpRequest();
-request.open('GET', 'https://proxy.cors.sh/https://currate.ru/api/?get=rates&pairs=USDRUB&key=46c6122719c4bd578e077c31d27e8213', true);
-request.send();
-request.onreadystatechange = function () {
-    if (request.readyState === 4) {
-        const response = JSON.parse(request.responseText);
-        exc = Math.round(Object.values((Object.values(response)[2]))[0])
-        get_balances()
-        balance.addEventListener('input', updateBar)
-        curr.addEventListener('change', updateBar)
-        loader.style.display = 'none'
-    }
+try {
+     fetch('https://api.currencyapi.com/v3/latest?apikey=LxFkEn2G3BvyxCGjJUaa9xe5QUFZwqfShLYLAE9o&currencies=RUB')
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Ответ сети был не ok.');
+            }
+            return response.json();
+        })
+        .then((response) => {
+            exc = Math.round(response.data.RUB.value)
+            console.log(exc)
+            get_balances()
+            balance.addEventListener('input', updateBar)
+            curr.addEventListener('change', updateBar)
+            loader.style.display = 'none'
+        })
+} catch
+    (error) {
+    console.log('Возникла проблема с вашим fetch запросом: ', error.message);
 }
 
-const get_balances = function() {
+
+const get_balances = function () {
     const prices = Array.from(document.getElementsByClassName('price'))
     const curr_el = document.getElementsByClassName('curr_el')
     let temp_usd = 0
-    
+
     for (let i = 0; i < prices.length; i++) {
         if (curr_el[i].innerHTML == '$') {
             temp_usd += Number(prices[i].innerHTML)
-            console.log(temp_usd) 
+            console.log(temp_usd)
         } else {
             temp_usd += Number(prices[i].innerHTML) / exc
-            console.log(temp_usd.toFixed(2) * exc) 
+            console.log(temp_usd.toFixed(2) * exc)
         }
     }
     usd = temp_usd
@@ -48,17 +56,17 @@ const get_balances = function() {
     updateBar()
 }
 
-const openModal = function() {
+const openModal = function () {
     modal.style.display = 'block'
 }
 
-const closeModal = function(event) {
+const closeModal = function (event) {
     if (!event.target.classList.contains('content')) {
         modal.style.display = 'none'
     }
 }
 
-const addEl = function() {
+const addEl = function () {
     const space = document.querySelector('.space')
     const audio = document.getElementsByTagName('audio')
     let title = document.getElementById('title')
@@ -73,7 +81,7 @@ const addEl = function() {
 
     el.className = 'el'
     el.draggable = 'true'
-    
+
     label_title.innerHTML = title.value
     label_price.innerHTML = price.value
     label_price.className = 'price'
@@ -84,7 +92,7 @@ const addEl = function() {
     btn_edit.className = 'btn edit'
     btn_del.type = 'button'
     btn_del.className = 'btn del'
-    
+
     el.appendChild(label_title)
     el.appendChild(label_price)
     el.appendChild(label_curr)
@@ -97,11 +105,11 @@ const addEl = function() {
     audio[0].play()
     get_balances()
 }
-const delEl = function() {
-    this.parentElement.remove() 
+const delEl = function () {
+    this.parentElement.remove()
     get_balances()
 }
-const dragStart = function() {
+const dragStart = function () {
     setTimeout(() => {
         dragEl = this
         this.style.visibility = 'hidden';
@@ -110,7 +118,7 @@ const dragStart = function() {
 const dragOver = function (evt) {
     evt.preventDefault()
 }
-const dragDrop = function() {
+const dragDrop = function () {
     let p = Array.from(this.getElementsByTagName('label'))
     let title = p[0].innerHTML
     let titleTemp = title
@@ -118,7 +126,7 @@ const dragDrop = function() {
     let priceTemp = price
     let curr = p[2].innerHTML
     let currTemp = curr
-    
+
     p[0].innerHTML = dragEl.getElementsByTagName('label')[0].innerHTML
     p[1].innerHTML = dragEl.getElementsByTagName('label')[1].innerHTML
     p[2].innerHTML = dragEl.getElementsByTagName('label')[2].innerHTML
@@ -126,39 +134,39 @@ const dragDrop = function() {
     dragEl.getElementsByTagName('label')[1].innerHTML = priceTemp
     dragEl.getElementsByTagName('label')[2].innerHTML = currTemp
 }
-const dragEnd = function() {
+const dragEnd = function () {
     this.style.visibility = 'visible';
 }
 
-const mousehover = function(event) {
-    if (event.target.classList.contains('el')){
+const mousehover = function (event) {
+    if (event.target.classList.contains('el')) {
         event.target.style.transform = 'scale(1.02)'
     }
-    if (event.target.parentElement.classList.contains('el')){
+    if (event.target.parentElement.classList.contains('el')) {
         event.target.parentElement.style.transform = 'scale(1.02)'
     }
 
 }
-const mouseout = function(event) {
-    if (event.target.classList.contains('el')){
+const mouseout = function (event) {
+    if (event.target.classList.contains('el')) {
         event.target.style.transform = 'scale(1)'
     }
-    if (event.target.parentElement.classList.contains('el')){
+    if (event.target.parentElement.classList.contains('el')) {
         event.target.parentElement.style.transform = 'scale(1)'
     }
 
 }
 
-const editEl = function() {
+const editEl = function () {
     let labels = this.parentElement.getElementsByTagName('label')
     this.classList.toggle('apply')
-    if (this.classList.contains('apply')){
+    if (this.classList.contains('apply')) {
         for (let el of labels) {
             if (el.classList.contains('curr_el')) {
                 continue
             }
             el.classList.toggle('edit_label')
-            el.setAttribute('contenteditable', true) 
+            el.setAttribute('contenteditable', true)
             el.innerHTML += ' '
         }
     } else {
@@ -167,14 +175,14 @@ const editEl = function() {
                 continue
             }
             el.classList.toggle('edit_label')
-            el.removeAttribute('contenteditable') 
+            el.removeAttribute('contenteditable')
             el.innerHTML += ' '
         }
     }
     get_balances()
 }
 
-const addEvents = function(el) {
+const addEvents = function (el) {
     el.addEventListener('dragstart', dragStart)
     el.addEventListener('dragover', dragOver)
     el.addEventListener('drop', dragDrop)
@@ -202,17 +210,17 @@ const updateBar = function () {
         bar.value = usd * exc
         bar.max = balance.value
     }
-   if (bar.value < bar.max * 33 / 100) {
+    if (bar.value < bar.max * 33 / 100) {
         ico.src = 'good.png'
-   } else if (bar.value < bar.max * 66 / 100) {
+    } else if (bar.value < bar.max * 66 / 100) {
         ico.src = 'normal.png'
-   } else {
+    } else {
         ico.src = 'bad.png'
-   }
+    }
 
 }
 
-document.querySelector('.themes').addEventListener('click',  (event) => {
+document.querySelector('.themes').addEventListener('click', (event) => {
     if (event.target.nodeName === 'INPUT') {
         document.documentElement.classList.remove('dark', 'light', 'neon')
         document.documentElement.classList.add(event.target.value)
