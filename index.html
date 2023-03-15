@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <title>Менеджер подписок</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="loader" id="loader">
+    <div class="load">
+      <img src="gif.gif" >
+    </div>
+  </div>
+  <div id="modal" class="modal">
+    <div class="content">
+      <span class="close">&times;</span>
+      <div class="themes">
+        <input type="button" class="btn theme1" value="dark">
+        <input type="button" class="btn theme2" value="light">
+        <input type="button" class="btn theme3" value="neon">
+      </div>
+    </div>
+  </div>
+  <div class='main'>
+      <div class="space_add">
+        <input type="text input" class="text input" id="title" placeholder="name">
+        <input type="text input" class="text input" id="price" placeholder="price">
+        <select class="text curr" id="curr"> 
+          <option>$</option>
+          <option>₽</option>
+        </select>
+        <input type="button" class="btn add" id="btn_add">
+      </div>
+      <input type="button" class="btn style" id="btn_style">
+      <img class="ico" src="https://cdn-icons-png.flaticon.com/512/1027/1027910.png">
+      <div class='space' id='space'></div>
+      <div class="space_info">
+        <label class="info">Ваш доход</label>
+        <input id='balance' type="text" class="text profit" id="price" placeholder="profit" value="0">
+        <select class="text curr_profit" id="curr_profit"> 
+          <option>$</option>
+          <option>₽</option>
+        </select>
+        <label  class="info">Ваш расход на подписки</label>
+        <label id='spend_usd' class="info"></label>
+        <label id='spend_rub' class="info"></label>
+        <img id='ico' class="ico_2" src="good.png">
+        <label  class="info bar">Процент траты на подписки</label>
+        <progress class="bar" id="bar"></progress>
+      </div>
+  </div>
+  <audio src="https://zvukipro.com/uploads/files/2020-11/1605077314_apple-pay-succes.mp3"></audio>
+  <script  src="script.js"></script>
+</body>
+</html>
