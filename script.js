@@ -24,7 +24,6 @@ try {
         })
         .then((response) => {
             exc = Math.round(response.data.RUB.value)
-            console.log(exc)
             get_balances()
             balance.addEventListener('input', updateBar)
             curr.addEventListener('change', updateBar)
